@@ -6,7 +6,7 @@ import math
 
 ctypes.windll.kernel32.SetConsoleTitleW("CaloryCalc")
 
-kkal_title_form = ['калорий', 'kcal', 'Calories', 'kkal', 'ккал']
+kсal_title_form = ['калорий', 'kcal', 'Calories', 'kkal', 'ккал']
 
 def get_site(url):
     USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0"
@@ -31,7 +31,7 @@ def not_found(name):
 def format_string(fna, name, kcal_form, soup, url):
     calories_position = fna.find(kcal_form)
 
-    for x in kkal_title_form:
+    for x in kсal_title_form:
         if calories_position <= 0:
             calories_position = fna.find(x)
 
@@ -52,7 +52,7 @@ def find_kkal(fna, name, url):
     url = url.replace(' ', '+')
     resp = get_site(url)
     soup = BeautifulSoup(resp.content, 'html.parser')
-    for x in kkal_title_form:
+    for x in kсal_title_form:
         fna = format_string(fna, name, x, soup, url)
 
     fna = soup.find('span', 'hgKElc').text.lower()
