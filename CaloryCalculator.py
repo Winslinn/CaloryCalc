@@ -65,21 +65,23 @@ def main():
     resp = get_site(url)
 
     if resp.status_code == 200:
-        soup = BeautifulSoup(resp.content, 'html.parser')
-        fna = soup.find('div', class_='Z0LcW an_fna')
-        fna_table = soup.find('div', class_='webanswers-webanswers_table__webanswers-table')
-        if fna != None and fna_table == None:
-            try:
-                print_result(name, fna.text[0:-6])
-            except Exception as error:
-                not_found(name + ' не найдено!' + '\n Error: ' + error)
-        elif fna == None and fna_table == None:
-            characters = soup.find('span', class_='hgKElc').text.lower()
-            find_kkal(characters, name, url)
-        elif fna_table != None:
-            characters = fna_table.find('table')
-            find_kkal(characters.text.lower(), name, url)
-
+        try:
+            soup = BeautifulSoup(resp.content, 'html.parser')
+            fna = soup.find('div', class_='Z0LcW an_fna')
+            fna_table = soup.find('div', class_='webanswers-webanswers_table__webanswers-table')
+            if fna != None and fna_table == None:
+                try:
+                    print_result(name, fna.text[0:-6])
+                except Exception as error:
+                    not_found(name + ' не найдено!' + '\n Error: ' + error)
+            elif fna == None and fna_table == None:
+                characters = soup.find('span', class_='hgKElc').text.lower()
+                find_kkal(characters, name, url)
+            elif fna_table != None:
+                characters = fna_table.find('table')
+                find_kkal(characters.text.lower(), name, url)
+        except:
+            not_found(name + ' не найдено')
     else:
         print('Status code:' + resp.status_code + '. Сайт не доступен.')
         input()
