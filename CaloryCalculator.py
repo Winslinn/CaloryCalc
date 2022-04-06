@@ -6,7 +6,7 @@ import math
 
 ctypes.windll.kernel32.SetConsoleTitleW("CaloryCalc")
 
-kkal_title_form = ['калорий', 'kkal', 'Calories']
+kkal_title_form = ['калорий', 'kcal', 'Calories']
 
 def print_result(name, fna):
     gram = input('Вес в граммах: ')
