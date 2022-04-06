@@ -1,4 +1,4 @@
-# CaloryCalc information / информация
+# CaloryCalc v1 information / информация
 
 
 
