@@ -4,7 +4,7 @@
 
 ## EU
 
-<p><b>CaloryCalc v1</b></p> - This is a simple colorizer in the terminal of various products, which searches for information in the Google search engine by parsing the search result.
+<p><b>CaloryCalc v1</b></p> - This is a simple calorizator in the terminal of various products, which searches for information in the Google search engine by parsing the search result.
 
 This is my first serious Python project.
 
