@@ -6,7 +6,7 @@ import math
 
 ctypes.windll.kernel32.SetConsoleTitleW("CaloryCalc")
 
-kсal_title_form = ['калорий', 'kcal', 'Calories', 'kkal', 'ккал']
+kсal_title_form = ['Calories', 'ккал', 'kcal', 'калорий']
 
 def get_site(url):
     USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0"
@@ -28,45 +28,36 @@ def not_found(name):
     input()
     main()
 
-def format_string(fna, name, kcal_form, soup, url):
-    calories_position = fna.find(kcal_form)
+def find_kkal(fna, name):
+    for title in kсal_title_form:
+        calories_position = fna.find(title)
+        if calories_position > 0:
+            for x in kсal_title_form:
+                if calories_position <= 0:
+                    calories_position = fna.find(x)
 
-    for x in kсal_title_form:
-        if calories_position <= 0:
-            calories_position = fna.find(x)
+            count_character = len(fna)
+            fna = fna[0:-(count_character - calories_position)]
 
-    count_character = len(fna)
-    fna = fna[0:-(count_character - calories_position)]
-    for x in range(0, len(fna)):
-        try:
-            calories = int(fna[x:])
-            if calories < 0:
-                calories = -calories
-            print_result(name, str(calories))
-        except:
-            pass
-
-    return fna
-
-def find_kkal(fna, name, url):
-    url = url.replace(' ', '+')
-    resp = get_site(url)
-    soup = BeautifulSoup(resp.content, 'html.parser')
-    for x in kсal_title_form:
-        fna = format_string(fna, name, x, soup, url)
-
-    fna = soup.find('span', 'hgKElc').text.lower()
-    find_kkal(fna, name, url)
+            for x in range(0, len(fna)):
+                try:
+                    calories = int(fna[x:])
+                    if calories < 0:
+                        calories = -calories
+                    print_result(name, str(calories))
+                    break
+                except:
+                    pass
 
 def main():
     os.system('cls')
     name = input('Название продукта: ')
     url = 'https://www.google.com/search?client=firefox-b-d&q=' + name.replace(' ', '+') + '+калорийность'
     resp = get_site(url)
+    soup = BeautifulSoup(resp.content, 'html.parser')
 
     if resp.status_code == 200:
         try:
-            soup = BeautifulSoup(resp.content, 'html.parser')
             fna = soup.find('div', class_='Z0LcW an_fna')
             fna_table = soup.find('div', class_='webanswers-webanswers_table__webanswers-table')
             if fna != None and fna_table == None:
@@ -75,13 +66,13 @@ def main():
                 except Exception as error:
                     not_found(name + ' не найдено!' + '\n Error: ' + error)
             elif fna == None and fna_table == None:
-                characters = soup.find('span', class_='hgKElc').text.lower()
-                find_kkal(characters, name, url)
+                characters = soup.find('span', class_='hgKElc').text
+                find_kkal(characters, name)
             elif fna_table != None:
-                characters = fna_table.find('table')
-                find_kkal(characters.text.lower(), name, url)
+                characters = fna_table.find('table').text.lower()
+                find_kkal(characters, name)
         except:
-            not_found(name + ' не найдено')
+            input()
     else:
         print('Status code:' + resp.status_code + '. Сайт не доступен.')
         input()
