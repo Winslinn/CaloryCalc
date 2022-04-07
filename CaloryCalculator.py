@@ -45,7 +45,6 @@ def find_kkal(fna, name):
                     if calories < 0:
                         calories = -calories
                     print_result(name, str(calories))
-                    break
                 except:
                     pass
 
