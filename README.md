@@ -2,7 +2,7 @@
 
 
 
-## EU
+## EN
 This is a simple calorizator of various products in the terminal, which searches for information in the Google search engine by parsing the search result.
 
 This is my first serious Python project.
