@@ -15,7 +15,7 @@ def get_site(url):
     return resp
 
 def print_result(name, fna):
-    gram = input('Вес в граммах: ')
+    gram = input('Вага в граммах: ')
     x = int(gram) / 100
     result = int(fna) * x
 
@@ -29,8 +29,9 @@ def not_found(name):
     main()
 
 def find_kkal(fna, name):
+    print(fna)
     for title in kсal_title_form:
-        calories_position = fna.find(title)
+        calories_position = fna.rfind(title)
         if calories_position > 0:
             for x in kсal_title_form:
                 if calories_position <= 0:
@@ -50,8 +51,8 @@ def find_kkal(fna, name):
 
 def main():
     os.system('cls')
-    name = input('Название продукта: ')
-    url = 'https://www.google.com/search?client=firefox-b-d&q=' + name.replace(' ', '+') + '+калорийность'
+    name = input('Назва продукту: ')
+    url = 'https://www.google.com/search?client=firefox-b-d&q=' + name.replace(' ', '+') + '+калорійність'
     resp = get_site(url)
     soup = BeautifulSoup(resp.content, 'html.parser')
 
@@ -63,7 +64,7 @@ def main():
                 try:
                     print_result(name, fna.text[0:-6])
                 except Exception as error:
-                    not_found(name + ' не найдено!' + '\n Error: ' + error)
+                    not_found(name + ' не знайдено!' + '\n Error: ' + error)
             elif fna == None and fna_table == None:
                 characters = soup.find('span', class_='hgKElc').text
                 find_kkal(characters, name)
@@ -73,7 +74,7 @@ def main():
         except:
             input()
     else:
-        print('Status code:' + resp.status_code + '. Сайт не доступен.')
+        print('Status code:' + resp.status_code + '. Сайт не доступний.')
         input()
     main()
 
