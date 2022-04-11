@@ -1,8 +1,10 @@
 from bs4 import BeautifulSoup
+from pyfiglet import Figlet
 import os
 import requests
 import ctypes
 import math
+import webbrowser
 
 ctypes.windll.kernel32.SetConsoleTitleW("CaloryCalc")
 
@@ -14,22 +16,43 @@ def get_site(url):
     resp = requests.get(url, headers=headers)
     return resp
 
-def print_result(name, fna):
+def print_result(name, fna, description, url):
     gram = input('Вага в граммах: ')
     x = int(gram) / 100
     result = int(fna) * x
 
-    print(name + ' (' + fna + 'ккал/100г): ' + str(math.floor(result)) + ' ккал.')
-    input()
-    main()
+    def def_command(result):
+        print('Отримана інформація для ручної фільтрації: ' + description + '\nВідкрити посилання на результат: b\n\nРезультат:')
+        print(name + ' (' + fna + 'ккал/100г): ' + str(math.floor(result)) + f' ккал.')
+        command = input()
+        if command == 'b':
+            try:
+                main()
+                webbrowser.open(url)
+            except:
+                return
+        elif command[:1] == '+' and command[len(command) - 1:] == '%':
+            os.system('cls')
+            def_command(result + result * int(command[:-1][1:]) / 100)
+        elif command[:1] == '-' and command[len(command) - 1:] == '%':
+            os.system('cls')
+            def_command(result - result * int(command[:-1][1:]) / 100)
+        elif command[:1] == '+' and command[len(command) - 1:] != '%':
+            os.system('cls')
+            def_command(result + int(command[1:]))
+        elif command[:1] == '-' and command[len(command) - 1:] != '%':
+            os.system('cls')
+            def_command(result - int(command[1:]))
+
+    def_command(result)
 
 def not_found(name):
     print(name)
     input()
     main()
 
-def find_kkal(fna, name):
-    print(fna)
+def find_kkal(fna, name, url):
+    description = fna
     for title in kсal_title_form:
         calories_position = fna.rfind(title)
         if calories_position > 0:
@@ -45,14 +68,14 @@ def find_kkal(fna, name):
                     calories = int(fna[x:])
                     if calories < 0:
                         calories = -calories
-                    print_result(name, str(calories))
+                    print_result(name, str(calories), description, url)
                 except:
                     pass
 
 def main():
     os.system('cls')
     name = input('Назва продукту: ')
-    url = 'https://www.google.com/search?client=firefox-b-d&q=' + name.replace(' ', '+') + '+калорійність'
+    url = 'https://www.google.com/search?client=firefox-b-d&q=' + name.replace(' ', '+') + '+калорийность'
     resp = get_site(url)
     soup = BeautifulSoup(resp.content, 'html.parser')
 
@@ -62,15 +85,15 @@ def main():
             fna_table = soup.find('div', class_='webanswers-webanswers_table__webanswers-table')
             if fna != None and fna_table == None:
                 try:
-                    print_result(name, fna.text[0:-6])
+                    print_result(name, fna.text[0:-6], fna.text, url)
                 except Exception as error:
                     not_found(name + ' не знайдено!' + '\n Error: ' + error)
             elif fna == None and fna_table == None:
                 characters = soup.find('span', class_='hgKElc').text
-                find_kkal(characters, name)
+                find_kkal(characters, name, url)
             elif fna_table != None:
                 characters = fna_table.find('table').text.lower()
-                find_kkal(characters, name)
+                find_kkal(characters, name, url)
         except:
             input()
     else:
@@ -79,4 +102,7 @@ def main():
     main()
 
 if __name__ == "__main__":
+    preview_text = Figlet(font='slant')
+    print(preview_text.renderText('Calory Calculator v1'))
+    input('Для продовження натисніть на Enter...')
     main()
