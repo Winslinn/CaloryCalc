@@ -1,9 +1,7 @@
 from bs4 import BeautifulSoup
 from ui import *
-import os
 import requests
 import ctypes
-import asyncio
 import math
 import webbrowser
 
