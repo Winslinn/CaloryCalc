@@ -1,4 +1,4 @@
-# CaloryCalc v1 information | інформація (Повністю переведено з ворожої мови на українську!)
+# CaloryCalc v1 information | інформація
 
 
 
